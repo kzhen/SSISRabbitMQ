@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSISRabbitMQ.RabbitMQConnectionManager", "SSISRabbitMQ.RabbitMQConnectionManager\SSISRabbitMQ.RabbitMQConnectionManager.csproj", "{9CB5D6AA-5845-4D6A-982B-1C1F05A83240}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSISRabbitMQ.RabbitMQSource", "SSISRabbitMQ.RabbitMQSource\SSISRabbitMQ.RabbitMQSource.csproj", "{29A1F479-CD7F-4F1B-9B9D-CBA2FFD16D78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSISRabbitMQ.RabbitMQDestination", "SSISRabbitMQ.RabbitMQDestination\SSISRabbitMQ.RabbitMQDestination.csproj", "{A1E6DC62-E31D-4CC2-82DB-915E975A8532}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9CB5D6AA-5845-4D6A-982B-1C1F05A83240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CB5D6AA-5845-4D6A-982B-1C1F05A83240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CB5D6AA-5845-4D6A-982B-1C1F05A83240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CB5D6AA-5845-4D6A-982B-1C1F05A83240}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29A1F479-CD7F-4F1B-9B9D-CBA2FFD16D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29A1F479-CD7F-4F1B-9B9D-CBA2FFD16D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29A1F479-CD7F-4F1B-9B9D-CBA2FFD16D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29A1F479-CD7F-4F1B-9B9D-CBA2FFD16D78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1E6DC62-E31D-4CC2-82DB-915E975A8532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1E6DC62-E31D-4CC2-82DB-915E975A8532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1E6DC62-E31D-4CC2-82DB-915E975A8532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1E6DC62-E31D-4CC2-82DB-915E975A8532}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
