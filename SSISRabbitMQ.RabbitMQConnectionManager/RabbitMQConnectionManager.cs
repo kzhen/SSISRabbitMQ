@@ -10,9 +10,9 @@ using RabbitMQ.Client;
 
 namespace SSISRabbitMQ.RabbitMQConnectionManager
 {
-  [DtsConnection(ConnectionType = "SQLCS",
-  DisplayName = "SqlConnectionManager (CS)",
-  Description = "Connection manager for Sql Server 1")]
+  [DtsConnection(ConnectionType = "RABBITMQ",
+  DisplayName = "RabbitMQ Connection Manager",
+  Description = "Connection manager for RabbitMQ")]
   public class RabbitMQConnectionManager : ConnectionManagerBase
   {
     public string HostName { get; set; }
@@ -30,10 +30,29 @@ namespace SSISRabbitMQ.RabbitMQConnectionManager
       VirtualHost = "/";
     }
 
-    private IConnection connection;
-
     public override Microsoft.SqlServer.Dts.Runtime.DTSExecResult Validate(Microsoft.SqlServer.Dts.Runtime.IDTSInfoEvents infoEvents)
     {
+      if (string.IsNullOrEmpty(HostName))
+      {
+        return DTSExecResult.Failure;
+      }
+      else if (string.IsNullOrEmpty(VirtualHost))
+      {
+        return DTSExecResult.Failure;
+      }
+      else if (string.IsNullOrEmpty(UserName))
+      {
+        return DTSExecResult.Failure;
+      }
+      else if (string.IsNullOrEmpty(Password))
+      {
+        return DTSExecResult.Failure;
+      }
+      else if (Port <= 0)
+      {
+        return DTSExecResult.Failure;
+      }
+
       return DTSExecResult.Success;
     }
 
@@ -48,14 +67,17 @@ namespace SSISRabbitMQ.RabbitMQConnectionManager
         VirtualHost = VirtualHost
       };
 
-      connection = connFactory.CreateConnection();
+      var connection = connFactory.CreateConnection();
 
       return connection;
     }
 
     public override void ReleaseConnection(object connection)
     {
-      ((IConnection)connection).Close();
+      if (connection != null)
+      {
+        ((IConnection)connection).Close();
+      }
     }
   }
 }
