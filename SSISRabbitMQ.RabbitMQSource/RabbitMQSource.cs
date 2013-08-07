@@ -8,6 +8,7 @@ using Microsoft.SqlServer.Dts.Runtime.Wrapper;
 using Microsoft.SqlServer.Dts.Pipeline;
 using Microsoft.SqlServer.Dts.Pipeline.Wrapper;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 
 namespace SSISRabbitMQ.RabbitMQSource
 {
@@ -79,7 +80,19 @@ namespace SSISRabbitMQ.RabbitMQSource
       PipelineBuffer buffer = buffers[0];
 
       IModel channel = rabbitConnection.CreateModel();
+      channel.QueueDeclare(queueName, true, false, false, null);
       QueueingBasicConsumer consumer = new QueueingBasicConsumer(channel);
+
+      string consumerTag = channel.BasicConsume(queueName, true, consumer);
+
+      BasicDeliverEventArgs e = (BasicDeliverEventArgs)consumer.Queue.Dequeue();
+      IBasicProperties props = e.BasicProperties;
+      byte[] body = e.Body;
+
+      var messageBody = System.Text.Encoding.UTF8.GetString(body);
+
+      buffer.AddRow();
+      buffer[0] = messageBody;
 
       buffer.SetEndOfRowset();
     }
