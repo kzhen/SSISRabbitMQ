@@ -28,7 +28,7 @@ namespace SSISRabbitMQ.RabbitMQConnectionManager
       UserName = "guest";
       Password = "guest";
       Port = 5672;
-      VirtualHost = "%2F";
+      VirtualHost = "/";
       QueueName = "myqueue";
     }
 
