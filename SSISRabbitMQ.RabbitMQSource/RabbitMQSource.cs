@@ -17,6 +17,8 @@ namespace SSISRabbitMQ.RabbitMQSource
   {
     private IConnection rabbitConnection;
 
+    private string queueName;
+
     public override void ProvideComponentProperties()
     {
       // Reset the component.
@@ -54,18 +56,32 @@ namespace SSISRabbitMQ.RabbitMQSource
       conn.ConnectionManagerID = "something";
       this.connectionManager = conn;
 
-      //if (ComponentMetaData.RuntimeConnectionCollection[0].ConnectionManager != null)
-      //{
-      //  ConnectionManager connectionManager = Microsoft.SqlServer.Dts.Runtime.DtsConvert.GetWrapper(
-      //    ComponentMetaData.RuntimeConnectionCollection[0].ConnectionManager);
 
-      //  RabbitMQConnectionManager.RabbitMQConnectionManager rabbitConnectionManager = connectionManager.InnerObject as RabbitMQConnectionManager.RabbitMQConnectionManager;
+      if (ComponentMetaData.RuntimeConnectionCollection[0].ConnectionManager != null)
+      {
+        ConnectionManager connectionManager = Microsoft.SqlServer.Dts.Runtime.DtsConvert.GetWrapper(
+          ComponentMetaData.RuntimeConnectionCollection[0].ConnectionManager);
 
-      //  if (rabbitConnectionManager == null)
-      //    throw new Exception("Couldn't get the RabbitMQ connection manager, ");
+        RabbitMQConnectionManager.RabbitMQConnectionManager rabbitConnectionManager = connectionManager.InnerObject as RabbitMQConnectionManager.RabbitMQConnectionManager;
 
-      //  rabbitConnection = rabbitConnectionManager.AcquireConnection(transaction) as IConnection;
-      //}
+        if (rabbitConnectionManager == null)
+          throw new Exception("Couldn't get the RabbitMQ connection manager, ");
+
+        queueName = rabbitConnectionManager.QueueName;
+
+        rabbitConnection = rabbitConnectionManager.AcquireConnection(transaction) as IConnection;
+      }
+    }
+
+    public override void PrimeOutput(int outputs, int[] outputIDs, PipelineBuffer[] buffers)
+    {
+      IDTSOutput100 output = ComponentMetaData.OutputCollection[0];
+      PipelineBuffer buffer = buffers[0];
+
+      IModel channel = rabbitConnection.CreateModel();
+      QueueingBasicConsumer consumer = new QueueingBasicConsumer(channel);
+
+      buffer.SetEndOfRowset();
     }
   }
 }

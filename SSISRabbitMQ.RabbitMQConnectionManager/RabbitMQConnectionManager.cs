@@ -20,6 +20,7 @@ namespace SSISRabbitMQ.RabbitMQConnectionManager
     public string Password { get; set; }
     public int Port { get; set; }
     public string VirtualHost { get; set; }
+    public string QueueName { get; set; }
 
     public RabbitMQConnectionManager()
     {
@@ -27,7 +28,8 @@ namespace SSISRabbitMQ.RabbitMQConnectionManager
       UserName = "guest";
       Password = "guest";
       Port = 5672;
-      VirtualHost = "/";
+      VirtualHost = "%2F";
+      QueueName = "myqueue";
     }
 
     public override Microsoft.SqlServer.Dts.Runtime.DTSExecResult Validate(Microsoft.SqlServer.Dts.Runtime.IDTSInfoEvents infoEvents)
