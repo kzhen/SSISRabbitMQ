@@ -12,13 +12,20 @@ using RabbitMQ.Client.Events;
 
 namespace SSISRabbitMQ.RabbitMQSource
 {
-  [DtsPipelineComponent(DisplayName = "RabbitMQ Source", 
-    ComponentType = ComponentType.SourceAdapter, Description="Connection source for RabbitMQ")]
+  [DtsPipelineComponent(DisplayName = "RabbitMQ Source",
+    ComponentType = ComponentType.SourceAdapter, Description = "Connection source for RabbitMQ")]
   public class RabbitMQSource : PipelineComponent
   {
     private IConnection rabbitConnection;
-
     private string queueName;
+
+    public override void ReleaseConnections()
+    {
+      if (rabbitMqConnectionManager != null)
+      {
+        this.rabbitMqConnectionManager.ReleaseConnection(rabbitConnection);
+      }
+    }
 
     public override void ProvideComponentProperties()
     {
@@ -29,8 +36,12 @@ namespace SSISRabbitMQ.RabbitMQSource
       IDTSOutput100 output = ComponentMetaData.OutputCollection.New();
       output.Name = "Output";
 
+      IDTSCustomProperty100 queueName = ComponentMetaData.CustomPropertyCollection.New();
+      queueName.Name = "QueueName";
+      queueName.Description = "The name of the RabbitMQ queue to read messages from";
+
       IDTSRuntimeConnection100 connection = ComponentMetaData.RuntimeConnectionCollection.New();
-      connection.Name = "RABBITMQ";
+      connection.Name = "RabbitMQ";
 
       CreateColumns();
     }
@@ -45,16 +56,23 @@ namespace SSISRabbitMQ.RabbitMQSource
       IDTSOutputColumn100 column1 = output.OutputColumnCollection.New();
       IDTSExternalMetadataColumn100 exColumn1 = output.ExternalMetadataColumnCollection.New();
 
+      IDTSOutputColumn100 column2 = output.OutputColumnCollection.New();
+      IDTSExternalMetadataColumn100 exColumn2 = output.ExternalMetadataColumnCollection.New();
+
       column1.Name = "MessageContents";
       column1.SetDataTypeProperties(DataType.DT_WSTR, 100, 0, 0, 0);
+
+      column2.Name = "RoutingKey";
+      column2.SetDataTypeProperties(DataType.DT_WSTR, 100, 0, 0, 0);
     }
 
     private IDTSRuntimeConnection100 connectionManager;
+    private RabbitMQConnectionManager.RabbitMQConnectionManager rabbitMqConnectionManager;
 
     public override void AcquireConnections(object transaction)
     {
       IDTSRuntimeConnection100 conn = ComponentMetaData.RuntimeConnectionCollection[0];
-      conn.ConnectionManagerID = "something";
+      conn.ConnectionManagerID = "RabbitMQ";
       this.connectionManager = conn;
 
 
@@ -63,14 +81,14 @@ namespace SSISRabbitMQ.RabbitMQSource
         ConnectionManager connectionManager = Microsoft.SqlServer.Dts.Runtime.DtsConvert.GetWrapper(
           ComponentMetaData.RuntimeConnectionCollection[0].ConnectionManager);
 
-        RabbitMQConnectionManager.RabbitMQConnectionManager rabbitConnectionManager = connectionManager.InnerObject as RabbitMQConnectionManager.RabbitMQConnectionManager;
+        this.rabbitMqConnectionManager = connectionManager.InnerObject as RabbitMQConnectionManager.RabbitMQConnectionManager;
 
-        if (rabbitConnectionManager == null)
+        this.queueName = ComponentMetaData.CustomPropertyCollection["QueueName"].Value;
+
+        if (this.rabbitMqConnectionManager == null)
           throw new Exception("Couldn't get the RabbitMQ connection manager, ");
 
-        queueName = rabbitConnectionManager.QueueName;
-
-        rabbitConnection = rabbitConnectionManager.AcquireConnection(transaction) as IConnection;
+        rabbitConnection = this.rabbitMqConnectionManager.AcquireConnection(transaction) as IConnection;
       }
     }
 
@@ -85,14 +103,27 @@ namespace SSISRabbitMQ.RabbitMQSource
 
       string consumerTag = channel.BasicConsume(queueName, true, consumer);
 
-      BasicDeliverEventArgs e = (BasicDeliverEventArgs)consumer.Queue.Dequeue();
-      IBasicProperties props = e.BasicProperties;
-      byte[] body = e.Body;
+      object message;
 
-      var messageBody = System.Text.Encoding.UTF8.GetString(body);
+      while (true)
+      {
+        bool success = consumer.Queue.Dequeue(100, out message);
 
-      buffer.AddRow();
-      buffer[0] = messageBody;
+        if (success)
+        {
+          BasicDeliverEventArgs e = (BasicDeliverEventArgs)message;
+
+          var messageContent = System.Text.Encoding.UTF8.GetString(e.Body);
+
+          buffer.AddRow();
+          buffer[0] = messageContent;
+          buffer[1] = e.RoutingKey;
+        }
+        else
+        {
+          break;
+        }
+      }
 
       buffer.SetEndOfRowset();
     }
