@@ -12,7 +12,8 @@ namespace SSISRabbitMQ.RabbitMQConnectionManager
 {
   [DtsConnection(ConnectionType = "RABBITMQ",
   DisplayName = "RabbitMQ Connection Manager",
-  Description = "Connection manager for RabbitMQ")]
+  Description = "Connection manager for RabbitMQ",
+  UITypeName = "SSISRabbitMQ.RabbitMQConnectionManager.RabbitMQConnectionManagerUI, SSISRabbitMQ.RabbitMQConnectionManager, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ac1c316408dd3955")]
   public class RabbitMQConnectionManager : ConnectionManagerBase
   {
     public string HostName { get; set; }
@@ -20,7 +21,6 @@ namespace SSISRabbitMQ.RabbitMQConnectionManager
     public string Password { get; set; }
     public int Port { get; set; }
     public string VirtualHost { get; set; }
-    public string QueueName { get; set; }
 
     public RabbitMQConnectionManager()
     {
@@ -29,7 +29,6 @@ namespace SSISRabbitMQ.RabbitMQConnectionManager
       Password = "guest";
       Port = 5672;
       VirtualHost = "/";
-      QueueName = "myqueue";
     }
 
     public override Microsoft.SqlServer.Dts.Runtime.DTSExecResult Validate(Microsoft.SqlServer.Dts.Runtime.IDTSInfoEvents infoEvents)
