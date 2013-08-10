@@ -19,14 +19,6 @@ namespace SSISRabbitMQ.RabbitMQSource
     private IConnection rabbitConnection;
     private string queueName;
 
-    public override void ReleaseConnections()
-    {
-      if (rabbitMqConnectionManager != null)
-      {
-        this.rabbitMqConnectionManager.ReleaseConnection(rabbitConnection);
-      }
-    }
-
     public override void ProvideComponentProperties()
     {
       // Reset the component.
@@ -42,6 +34,7 @@ namespace SSISRabbitMQ.RabbitMQSource
 
       IDTSRuntimeConnection100 connection = ComponentMetaData.RuntimeConnectionCollection.New();
       connection.Name = "RabbitMQ";
+      connection.ConnectionManagerID = "RabbitMQ";
 
       CreateColumns();
     }
@@ -66,16 +59,10 @@ namespace SSISRabbitMQ.RabbitMQSource
       column2.SetDataTypeProperties(DataType.DT_WSTR, 100, 0, 0, 0);
     }
 
-    private IDTSRuntimeConnection100 connectionManager;
     private RabbitMQConnectionManager.RabbitMQConnectionManager rabbitMqConnectionManager;
 
     public override void AcquireConnections(object transaction)
     {
-      IDTSRuntimeConnection100 conn = ComponentMetaData.RuntimeConnectionCollection[0];
-      conn.ConnectionManagerID = "RabbitMQ";
-      this.connectionManager = conn;
-
-
       if (ComponentMetaData.RuntimeConnectionCollection[0].ConnectionManager != null)
       {
         ConnectionManager connectionManager = Microsoft.SqlServer.Dts.Runtime.DtsConvert.GetWrapper(
@@ -89,6 +76,14 @@ namespace SSISRabbitMQ.RabbitMQSource
           throw new Exception("Couldn't get the RabbitMQ connection manager, ");
 
         rabbitConnection = this.rabbitMqConnectionManager.AcquireConnection(transaction) as IConnection;
+      }
+    }
+
+    public override void ReleaseConnections()
+    {
+      if (rabbitMqConnectionManager != null)
+      {
+        this.rabbitMqConnectionManager.ReleaseConnection(rabbitConnection);
       }
     }
 
