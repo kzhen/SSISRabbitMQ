@@ -77,7 +77,12 @@ namespace SSISRabbitMQ.RabbitMQConnectionManager
     {
       if (connection != null)
       {
-        ((IConnection)connection).Close();
+        var conn = connection as IConnection;
+
+        if (conn != null && conn.IsOpen)
+        {
+          conn.Close();
+        }
       }
     }
   }
