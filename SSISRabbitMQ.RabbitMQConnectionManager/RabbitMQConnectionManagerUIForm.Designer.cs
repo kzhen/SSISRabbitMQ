@@ -28,6 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RabbitMQConnectionManagerUIForm));
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.nmPort = new System.Windows.Forms.NumericUpDown();
       this.label5 = new System.Windows.Forms.Label();
@@ -196,10 +197,10 @@
       this.Controls.Add(this.btnCancel);
       this.Controls.Add(this.btnOK);
       this.Controls.Add(this.groupBox1);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "RabbitMQConnectionManagerUIForm";
-      this.ShowIcon = false;
       this.ShowInTaskbar = false;
       this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
       this.Text = "RabbitMQ Connection Manager";
