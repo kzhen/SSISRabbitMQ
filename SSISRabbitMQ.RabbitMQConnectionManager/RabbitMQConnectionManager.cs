@@ -10,7 +10,8 @@ using RabbitMQ.Client;
 
 namespace SSISRabbitMQ.RabbitMQConnectionManager
 {
-  [DtsConnection(ConnectionType = "RABBITMQ",
+  [DtsConnection(IconResource = "SSISRabbitMQ.RabbitMQConnectionManager.Rabbit.ico",
+    ConnectionType = "RABBITMQ",
   DisplayName = "RabbitMQ Connection Manager",
   Description = "Connection manager for RabbitMQ",
   UITypeName = "SSISRabbitMQ.RabbitMQConnectionManager.RabbitMQConnectionManagerUI, SSISRabbitMQ.RabbitMQConnectionManager, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ac1c316408dd3955")]
