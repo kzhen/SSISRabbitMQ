@@ -1,4 +1,5 @@
 ﻿using Microsoft.SqlServer.Dts.Pipeline.Wrapper;
+using Microsoft.SqlServer.Dts.Runtime;
 using Microsoft.SqlServer.Dts.Runtime.Design;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,6 @@ namespace SSISRabbitMQ.RabbitMQSource
     {
       public string ID;
       public string Name { get; set; }
-      public int Idx { get; set; }
       public RabbitMQConnectionManager.RabbitMQConnectionManager ConnManager { get; set; }
 
       public override string ToString()
@@ -43,11 +43,14 @@ namespace SSISRabbitMQ.RabbitMQSource
       this.serviceProvider = serviceProvider;
       this.connectionService = (IDtsConnectionService)serviceProvider.GetService(typeof(IDtsConnectionService));
       this.designTimeInstance = metaData.Instantiate();
+    }
 
+    private void RabbitMQSourceUIForm_Load(object sender, EventArgs e)
+    {
       var connections = connectionService.GetConnections();
 
       var queueName = metaData.CustomPropertyCollection[0];
-      textBox1.Text = queueName.Value;
+      txtQueueName.Text = queueName.Value;
 
       string connectionManagerId = string.Empty;
 
@@ -66,7 +69,6 @@ namespace SSISRabbitMQ.RabbitMQSource
           var item = new ConnectionManagerItem()
           {
             Name = connections[i].Name,
-            Idx = i,
             ConnManager = conn,
             ID = connections[i].ID
           };
@@ -82,20 +84,36 @@ namespace SSISRabbitMQ.RabbitMQSource
 
     private void btnOK_Click(object sender, EventArgs e)
     {
-      if (!string.IsNullOrWhiteSpace(textBox1.Text))
+      if (!string.IsNullOrWhiteSpace(txtQueueName.Text))
       {
-        designTimeInstance.SetComponentProperty("QueueName", textBox1.Text);
+        designTimeInstance.SetComponentProperty("QueueName", txtQueueName.Text);
       }
 
       if (cbConnectionList.SelectedItem != null)
       {
         var item = (ConnectionManagerItem)cbConnectionList.SelectedItem;
         this.metaData.RuntimeConnectionCollection[0].ConnectionManagerID = item.ID;
-        
       }
 
       this.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.Close();
+    }
+
+    private void btnNewConnectionManager_Click(object sender, EventArgs e)
+    {
+      System.Collections.ArrayList created = connectionService.CreateConnection("RABBITMQ");
+
+      foreach (ConnectionManager cm in created)
+      {
+        var item = new ConnectionManagerItem()
+        {
+          Name = cm.Name,
+          ConnManager = cm.InnerObject as RabbitMQConnectionManager.RabbitMQConnectionManager,
+          ID = cm.ID
+        };
+
+        cbConnectionList.Items.Insert(0, item);
+      }
     }
   }
 }

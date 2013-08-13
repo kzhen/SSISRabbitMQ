@@ -41,7 +41,7 @@
       this.panel4 = new System.Windows.Forms.Panel();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.textBox1 = new System.Windows.Forms.TextBox();
+      this.txtQueueName = new System.Windows.Forms.TextBox();
       this.panel1.SuspendLayout();
       this.panel2.SuspendLayout();
       this.panel3.SuspendLayout();
@@ -136,6 +136,7 @@
       this.btnNewConnectionManager.TabIndex = 2;
       this.btnNewConnectionManager.Text = "New";
       this.btnNewConnectionManager.UseVisualStyleBackColor = true;
+      this.btnNewConnectionManager.Click += new System.EventHandler(this.btnNewConnectionManager_Click);
       // 
       // panel4
       // 
@@ -148,7 +149,7 @@
       // groupBox2
       // 
       this.groupBox2.Controls.Add(this.label2);
-      this.groupBox2.Controls.Add(this.textBox1);
+      this.groupBox2.Controls.Add(this.txtQueueName);
       this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
       this.groupBox2.Location = new System.Drawing.Point(0, 0);
       this.groupBox2.Name = "groupBox2";
@@ -166,12 +167,12 @@
       this.label2.TabIndex = 8;
       this.label2.Text = "Queue Name";
       // 
-      // textBox1
+      // txtQueueName
       // 
-      this.textBox1.Location = new System.Drawing.Point(119, 26);
-      this.textBox1.Name = "textBox1";
-      this.textBox1.Size = new System.Drawing.Size(188, 20);
-      this.textBox1.TabIndex = 7;
+      this.txtQueueName.Location = new System.Drawing.Point(119, 26);
+      this.txtQueueName.Name = "txtQueueName";
+      this.txtQueueName.Size = new System.Drawing.Size(188, 20);
+      this.txtQueueName.TabIndex = 7;
       // 
       // RabbitMQSourceUIForm
       // 
@@ -183,9 +184,13 @@
       this.Controls.Add(this.panel4);
       this.Controls.Add(this.panel3);
       this.Controls.Add(this.panel1);
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+      this.MaximizeBox = false;
       this.Name = "RabbitMQSourceUIForm";
+      this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
       this.Text = "RabbitMQ Source Editor";
+      this.Load += new System.EventHandler(this.RabbitMQSourceUIForm_Load);
       this.panel1.ResumeLayout(false);
       this.panel2.ResumeLayout(false);
       this.panel3.ResumeLayout(false);
@@ -212,6 +217,6 @@
     private System.Windows.Forms.Panel panel4;
     private System.Windows.Forms.GroupBox groupBox2;
     private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.TextBox textBox1;
+    private System.Windows.Forms.TextBox txtQueueName;
   }
 }
