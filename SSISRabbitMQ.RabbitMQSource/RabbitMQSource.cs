@@ -92,10 +92,10 @@ namespace SSISRabbitMQ.RabbitMQSource
 
         this.rabbitMqConnectionManager = connectionManager.InnerObject as RabbitMQConnectionManager.RabbitMQConnectionManager;
 
-        this.queueName = ComponentMetaData.CustomPropertyCollection["QueueName"].Value;
-
         if (this.rabbitMqConnectionManager == null)
           throw new Exception("Couldn't get the RabbitMQ connection manager, ");
+
+        this.queueName = ComponentMetaData.CustomPropertyCollection["QueueName"].Value;
 
         rabbitConnection = this.rabbitMqConnectionManager.AcquireConnection(transaction) as IConnection;
       }
