@@ -18,7 +18,6 @@ namespace SSISRabbitMQ.RabbitMQSource
 
     public void Delete(IWin32Window parentWindow)
     {
-      
     }
 
     public bool Edit(IWin32Window parentWindow, DTSRuntime.Variables variables, DTSRuntime.Connections connections)
@@ -32,11 +31,11 @@ namespace SSISRabbitMQ.RabbitMQSource
     {
     }
 
-    private void ShowForm(IWin32Window window)
+    private DialogResult ShowForm(IWin32Window window)
     {
       RabbitMQSourceUIForm form = new RabbitMQSourceUIForm(metaData, serviceProvider);
 
-      var result = form.ShowDialog(window);
+      return form.ShowDialog(window);
     }
 
     public void Initialize(IDTSComponentMetaData100 dtsComponentMetadata, IServiceProvider serviceProvider)
@@ -45,7 +44,6 @@ namespace SSISRabbitMQ.RabbitMQSource
       this.metaData = dtsComponentMetadata;
 
       this.connectionService = (IDtsConnectionService)serviceProvider.GetService(typeof(IDtsConnectionService));
-
     }
 
     public void New(IWin32Window parentWindow)

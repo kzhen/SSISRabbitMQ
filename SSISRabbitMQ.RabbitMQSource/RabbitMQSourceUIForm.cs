@@ -54,7 +54,7 @@ namespace SSISRabbitMQ.RabbitMQSource
 
       string connectionManagerId = string.Empty;
 
-      var currentConnectionManager = this.metaData.RuntimeConnectionCollection[0];//.ConnectionManagerID;
+      var currentConnectionManager = this.metaData.RuntimeConnectionCollection[0];
       if (currentConnectionManager != null)
       {
         connectionManagerId = currentConnectionManager.ConnectionManagerID;
