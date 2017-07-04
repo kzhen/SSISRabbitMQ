@@ -8,9 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using DTSRuntime = Microsoft.SqlServer.Dts.Runtime;
 
-namespace SSISRabbitMQ.RabbitMQSource
+namespace SSISRabbitMQ.RabbitMQDestination
 {
-    public class RabbitMQSourceUI : IDtsComponentUI
+    public class RabbitMQDestinationUI : IDtsComponentUI
     {
         private IServiceProvider serviceProvider;
         private IDTSComponentMetaData100 metaData;
@@ -33,7 +33,7 @@ namespace SSISRabbitMQ.RabbitMQSource
 
         private DialogResult ShowForm(IWin32Window window)
         {
-            RabbitMQSourceUIForm form = new RabbitMQSourceUIForm(metaData, serviceProvider);
+            RabbitMQDestinationUIForm form = new RabbitMQDestinationUIForm(metaData, serviceProvider);
 
             return form.ShowDialog(window);
         }
